@@ -1,0 +1,32 @@
+[
+  {
+    "img": "/img/apps/youtube.jpg",
+    "location": "https://youtube.com",
+    "title": "Youtube"
+  },
+  {
+    "img": "/img/apps/spotify.jpg",
+    "location": "https://spotify.com",
+    "title": "Spotify"
+  },
+  {
+    "img": "/img/apps/reddit.png",
+    "location": "https://reddit.com",
+    "title": "Reddit"
+  },
+  {
+    "img": "/img/apps/discord.jpg",
+    "location": "https://discord.com/app",
+    "title": "Discord"
+  },
+  {
+    "img": "/img/apps/y8.png",
+    "location": "https://www.y8.com",
+    "title": "Y8"
+  },
+  {
+    "img": "/img/apps/vsc.png",
+    "location": "https://vscode.dev",
+    "title": "VS Code"
+  }
+]

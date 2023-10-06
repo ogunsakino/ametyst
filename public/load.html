@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!--
+    Amethyst
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+    -->
+    <script src="./uv/uv.bundle.js"></script>
+    <script src="./uv/uv.config.js"></script>
+    <style>
+        @font-face {
+            font-family: 'Roboto';
+            font-style: normal;
+            font-weight: 400;
+            src: url('./css/Roboto-Regular.ttf') format('woff');
+        }
+        body {
+            background: #111;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0px;
+            align-items: center;
+        }
+        .msg {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        p {
+            font-family: Roboto;
+        }
+        .info {
+            color: #FFF;
+            max-width: 600px;
+            text-align: center;
+            margin: 35px 0px 0px 0px;
+        }
+        /* Loading */
+        .lds-grid {
+            display: inline-block;
+            position: relative;
+            width: 80px;
+            height: 80px;
+        }
+        .lds-grid div {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #fff;
+            animation: lds-grid 1.2s linear infinite;
+        }
+        .lds-grid div:nth-child(1) {
+            top: 8px;
+            left: 8px;
+            animation-delay: 0s;
+        }
+        .lds-grid div:nth-child(2) {
+            top: 8px;
+            left: 32px;
+            animation-delay: -0.4s;
+        }
+        .lds-grid div:nth-child(3) {
+            top: 8px;
+            left: 56px;
+            animation-delay: -0.8s;
+        }
+        .lds-grid div:nth-child(4) {
+            top: 32px;
+            left: 8px;
+            animation-delay: -0.4s;
+        }
+        .lds-grid div:nth-child(5) {
+            top: 32px;
+            left: 32px;
+            animation-delay: -0.8s;
+        }
+        .lds-grid div:nth-child(6) {
+            top: 32px;
+            left: 56px;
+            animation-delay: -1.2s;
+        }
+        .lds-grid div:nth-child(7) {
+            top: 56px;
+            left: 8px;
+            animation-delay: -0.8s;
+        }
+        .lds-grid div:nth-child(8) {
+            top: 56px;
+            left: 32px;
+            animation-delay: -1.2s;
+        }
+        .lds-grid div:nth-child(9) {
+            top: 56px;
+            left: 56px;
+            animation-delay: -1.6s;
+        }
+        @keyframes lds-grid {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="msg">
+        <div class="lds-grid">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+        <p class="info">
+            Please wait a moment.
+            Our service maybe under high load causing some slowness on our servers. Your request will eventually be
+            responded to.
+        </p>
+    </div>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistration('./uv/sw.js').then(async worker => {
+                if(!worker) await navigator.serviceWorker.register('./uv/sw.js', { scope: __uv$config.prefix });
+                let url = atob(decodeURIComponent(window.location.hash.slice(1)));
+                let search;
+                switch (localStorage.getItem('amethyst||search')) {
+                    case 'google':
+                        search = 'https://google.com/search?q='
+                        break;
+                    case 'brave':
+                        search = 'https://search.brave.com/search?q='
+                        break;
+                    default:
+                        localStorage.setItem('amethyst||search', 'ddg');
+                    case 'ddg':
+                        search = 'https://duckduckgo.com/?q='
+                        break;
+                };
+                if (url) {
+                    if (!isUrl(url)) url = search + url;
+                    else if (!(url.startsWith('https://') || url.startsWith('http://'))) { url = 'http://' + url; };
+                } else { url = new URL(search).origin }
+                window.location.href = __uv$config.prefix + __uv$config.encodeUrl(url);
+            });
+        } else {
+            document.querySelector('.lds-grid').remove();
+            document.querySelector('.info').textContent = 'Your browser does not support service workers or is blocking them (private browsing mode?). Try swapping or updating your browser.'
+        };
+
+        function isUrl(val = '') {
+            if (/^http(s?):\/\//.test(val) || val.includes('.') && val.substr(0, 1) !== ' ') return true;
+            return false;
+        }
+    </script>
+</body>
+</html>
